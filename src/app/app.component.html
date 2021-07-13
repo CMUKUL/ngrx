@@ -30,6 +30,6 @@
   </mat-card-content>
 </mat-card>
 <mat-card *ngIf = "isLoggedIn">
-  <P>You Logged In!!</P>
+  <P>{{form.value.email}} Logged In!!</P>
   <button mat-raised-button color = "warn" (click)="logout()">Logout</button>
 </mat-card>

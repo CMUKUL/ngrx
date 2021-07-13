@@ -14,7 +14,7 @@ import { userLoggedInAction,userLoggedInSuccessAction, userLoggedOutSuccessActio
 export class AppComponent implements OnInit {
   title = 'NgRx';
   form: FormGroup;
-  PASSWORD_REGEX = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*\.\,\\\;\'\"])(?=.{8,})");
+  //PASSWORD_REGEX = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*\.\,\\\;\'\"])(?=.{8,})");
   EMAIL_REGEXP = /^[\-_a-zA-Z0-9 ]+(\.[\-_a-zA-Z0-9]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,4})$/;
   signinData :any;
   isLoggedIn:boolean = false;
@@ -27,8 +27,8 @@ export class AppComponent implements OnInit {
           errors: null
       };
       this.form = fb.group({
-          email: [null, Validators.compose([Validators.required, Validators.pattern(this.EMAIL_REGEXP)])],
-          password: [null,Validators.compose([Validators.required, Validators.pattern(this.PASSWORD_REGEX)])]
+          email: [null, Validators.compose([Validators.required,Validators.pattern(this.EMAIL_REGEXP)])],
+          password: [null,Validators.compose([Validators.required, Validators.minLength(6),Validators.maxLength(20)])]
       });
 
   }
@@ -46,7 +46,10 @@ export class AppComponent implements OnInit {
   }
 
   login() {
-    if(this.form.invalid){
+
+    //if(this.form.invalid || this.form.value.password.length < 6 || this.form.value.password.length > 20){
+      if(this.form.invalid){
+  
       this.isLoggedIn = false;
       this.signinData['errors'] = "Please enter a valid user name and password to login.";
     }else{
@@ -54,7 +57,7 @@ export class AppComponent implements OnInit {
       this.isLoggedIn = true;
       this.store.dispatch( new userLoggedInAction());
       setTimeout(()=>{
-        this.store.dispatch( new userLoggedInSuccessAction({data:[{id:'1',email:'mukul@ibm.com'}]}))
+        this.store.dispatch( new userLoggedInSuccessAction({data:[{id:'1',email:this.form.value.email}]}))
       
         this.store.select(getUserData).subscribe(data => {
           console.log("data",data)
